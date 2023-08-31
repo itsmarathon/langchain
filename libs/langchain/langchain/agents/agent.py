@@ -680,6 +680,7 @@ s
     trim_intermediate_steps: Union[
         int, Callable[[List[Tuple[AgentAction, str]]], List[Tuple[AgentAction, str]]]
     ] = -1
+    agent_executor_uuid: Optional[str] = None
 
     @classmethod
     def from_agent_and_tools(
@@ -826,6 +827,7 @@ s
 
         Override this to take control of how the agent makes and acts on choices.
         """
+        print("VSAL: " + self.agent_executor_uuid)
         try:
             intermediate_steps = self._prepare_intermediate_steps(intermediate_steps)
 
@@ -888,11 +890,13 @@ s
                 if return_direct:
                     tool_run_kwargs["llm_prefix"] = ""
                 # We then call the tool on the tool input to get an observation
+                print("VSAL tool: " + self.agent_executor_uuid)
                 observation = tool.run(
                     agent_action.tool_input,
                     verbose=self.verbose,
                     color=color,
                     callbacks=run_manager.get_child() if run_manager else None,
+                    agent_executor_uuid=self.agent_executor_uuid,
                     **tool_run_kwargs,
                 )
             else:

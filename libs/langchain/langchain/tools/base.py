@@ -319,6 +319,8 @@ class ChildTool(BaseTool):
         )
         try:
             tool_args, tool_kwargs = self._to_args_and_kwargs(parsed_input)
+            if "agent_executor_uuid" in kwargs:
+                tool_kwargs["agent_executor_uuid"] = kwargs["agent_executor_uuid"]
             observation = (
                 self._run(*tool_args, run_manager=run_manager, **tool_kwargs)
                 if new_arg_supported
